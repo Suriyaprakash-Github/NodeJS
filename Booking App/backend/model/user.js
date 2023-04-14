@@ -1,13 +1,13 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../data/database");
 
-const User = sequelize.define("users", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncremeant: true,
-    allowNull: false,
-    primaryKey: true,
-  },
+const User = sequelize.define("user", {
+  // id: {
+  //   type: Sequelize.INTEGER,
+  //   autoIncremeant: true,
+  //   allowNull: false,
+  //   primaryKey: true,
+  // },
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -22,5 +22,5 @@ const User = sequelize.define("users", {
     unique: true,
   },
 });
-
+// console.log("in model");
 module.exports = User;
