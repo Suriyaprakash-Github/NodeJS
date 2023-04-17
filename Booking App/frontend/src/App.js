@@ -1,4 +1,5 @@
 import Form from "./components/Form";
+import AllAppointments from "./components/AllAppointments";
 
 function App() {
   return (
@@ -6,6 +7,7 @@ function App() {
       <div>
         Booking Appointment App
         <Form />
+        <AllAppointments />
       </div>
     </>
   );

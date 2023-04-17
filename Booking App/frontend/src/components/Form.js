@@ -9,7 +9,7 @@ const Form = () => {
   const enteredPhone = useRef();
 
   const formSubmitHandler = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     axios
       .post("http://localhost:4000/users/createUser", {
         name: enteredName.current.value,
@@ -18,14 +18,17 @@ const Form = () => {
       })
       .then()
       .catch((err) => console.log(err));
+    enteredName.current.value = "";
+    enteredEmail.current.value = "";
+    enteredPhone.current.value = "";
   };
 
   return (
     <>
       <div>
         <form
-          action="http://localhost:4000/users/createUser"
-          method="post"
+          action="http://localhost:3000/"
+          method="get"
           onSubmit={formSubmitHandler}
         >
           <div className={classes.formControl}>
