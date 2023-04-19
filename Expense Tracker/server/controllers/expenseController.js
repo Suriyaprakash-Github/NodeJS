@@ -16,3 +16,24 @@ exports.postNewExpense = (req, res, next) => {
       console.log(error);
     });
 };
+
+exports.getExpenses = (req, res, next) => {
+  Expense.findAll()
+    .then((expenses) => res.json(expenses))
+    .catch((err) => console.log(err));
+};
+
+exports.deleteExpense = (req, res, next) => {
+  const id = req.query.id;
+  Expense.findByPk(id)
+    .then((expense) => {
+      return expense.destroy();
+    })
+    .then((result) => {
+      console.log("user deleted");
+      res.redirect("http://localhost:3000");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
