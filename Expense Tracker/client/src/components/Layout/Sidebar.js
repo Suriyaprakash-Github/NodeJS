@@ -44,7 +44,7 @@ const Sidebar = () => {
         <hr />
         <div className={classes.sidebar_version}>
           <div>Version 0.0.25</div>
-          <div>&#169; Suriyaprakash</div>
+          <div className={classes.suriya}>&#169; Suriyaprakash</div>
         </div>
       </div>
     </>

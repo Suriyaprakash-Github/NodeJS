@@ -1,0 +1,16 @@
+.header_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header_container > h1 {
+  padding-left: 1rem;
+}
+.header_navItems {
+  padding-right: 1rem;
+}
+.header_navItems button {
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  font-family: "Poppins", sans-serif;
+}
