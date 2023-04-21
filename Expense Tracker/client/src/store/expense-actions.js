@@ -19,6 +19,7 @@ export const getAllExpenses = () => {
             })
           )
         );
-      });
+      })
+      .catch((err) => console.log("error in getting allExpenses", err));
   };
 };

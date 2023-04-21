@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { expenseActions } from "../../store/expense-slice";
+import { expenseActions } from "../store/expense-actions";
 import axios from "axios";
 
 const AddExpenseForm = () => {

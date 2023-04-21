@@ -4,7 +4,7 @@ import classes from "../styles/Overview.module.css";
 import Chart from "../components/Analytics/Chart";
 import AllExpenses from "../components/Expense/AllExpenses";
 
-const Overview = () => {
+const Overview = (props) => {
   return (
     <>
       <div className={classes.overview_container}>
@@ -17,6 +17,7 @@ const Overview = () => {
             <div>Remaining Funds</div>
             <div>Total Income</div>
             <div>Total Expense</div>
+            <button onClick={props.onClick}>Add Expenses</button>
           </div>
 
           <div className={classes.overview_content_display}>

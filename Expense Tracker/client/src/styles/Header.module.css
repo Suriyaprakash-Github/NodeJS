@@ -8,9 +8,50 @@
 }
 .header_navItems {
   padding-right: 1rem;
+  display: flex;
 }
-.header_navItems button {
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  width: 20rem;
+  background-color: rgb(230, 225, 225);
+  border-radius: 100px;
+}
+.searchBar:hover {
+  scale: 1.2rem;
+}
+
+.searchBar > div {
+  padding: 0 1rem;
+}
+
+.searchBar > input {
+  border: none;
+  background-color: inherit;
+  font-size: 1.2rem;
+  color: rgb(107, 105, 105);
+}
+
+.searchBar > input:active {
+  border: none;
+  background-color: inherit;
+}
+
+.header_navItems > button {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   font-family: "Poppins", sans-serif;
+}
+.header_buttons {
+  border: none;
+}
+.header_buttons:hover {
+  cursor: pointer;
+  scale: 1.2;
+}
+
+.header_buttons > img {
+  width: 3rem;
+  height: 3rem;
 }

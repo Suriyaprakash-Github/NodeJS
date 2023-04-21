@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-// import { Routes, Route } from "react-router-dom";
-// import Header from "./components/Layout/Header";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Layout/Header";
 import { useSelector } from "react-redux";
-// import Overview from "./pages/Overview";
-import AddExpenseForm from "./components/Expense/AddExpenseForm";
+import Overview from "./pages/Overview";
+// import AddExpenseForm from "./components/Expense/AddExpenseForm";
 import { getAllExpenses } from "./store/expense-actions";
 
 function App() {
@@ -20,11 +20,11 @@ function App() {
   return (
     <>
       <div>
-        {/* <Header />
+        <Header />
         <Routes>
           <Route path="/" element={<Overview />} />
-        </Routes> */}
-        <AddExpenseForm />
+        </Routes>
+        {/* <AddExpenseForm /> */}
       </div>
     </>
   );
