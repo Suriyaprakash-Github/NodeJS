@@ -10,7 +10,7 @@ exports.postNewExpense = (req, res, next) => {
     category: category,
   })
     .then((result) => {
-      return res.redirect("http://localhost:3000");
+      return res.json({ expense: result.dataValues });
     })
     .catch((error) => {
       console.log(error);

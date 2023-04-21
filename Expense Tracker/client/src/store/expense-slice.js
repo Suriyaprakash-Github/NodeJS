@@ -10,9 +10,12 @@ const expenseSlice = createSlice({
     addExpense(state, action) {
       const expense = action.payload;
       state.expenses.push({
+        id: expense.id,
         name: expense.name,
         amount: expense.amount,
         category: expense.category,
+        createdAt: expense.createdAt,
+        updatedAt: expense.updatedAt,
       });
     },
     editExpense() {},

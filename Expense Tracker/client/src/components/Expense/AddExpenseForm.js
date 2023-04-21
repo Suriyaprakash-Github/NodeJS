@@ -1,19 +1,22 @@
 import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../../store/expense-slice";
 import axios from "axios";
 
 const AddExpenseForm = () => {
+  const dispatch = useDispatch();
   const enteredExpenseName = useRef();
   const enteredExpenseAmount = useRef();
   const enteredExpenseCategory = useRef();
 
   const addExpenseHandler = (e) => {
     e.preventDefault();
-    console.log(
-      "indside form",
-      enteredExpenseName.current.value,
-      enteredExpenseAmount.current.value,
-      enteredExpenseCategory.current.value
-    );
+    // console.log(
+    //   "indside form",
+    //   enteredExpenseName.current.value,
+    //   enteredExpenseAmount.current.value,
+    //   enteredExpenseCategory.current.value
+    // );
 
     axios
       .post("http://localhost:4000/expense/newExpense", {
@@ -21,8 +24,31 @@ const AddExpenseForm = () => {
         amount: enteredExpenseAmount.current.value,
         category: enteredExpenseCategory.current.value,
       })
-      .then()
+      // .then((res) => console.log("form submit then", res.data.expense))
+      .then((res) => {
+        dispatch(
+          expenseActions.addExpense({
+            id: res.data.expense.id,
+            name: res.data.expense.name,
+            amount: res.data.expense.amount,
+            category: res.data.expense.category,
+            createdAt: res.data.expense.createdAt,
+            updatedAt: res.data.expense.updatedAt,
+          })
+        );
+      })
       .catch((err) => console.log(err));
+
+    // dispatch(
+    //   expenseActions.addExpense({
+    //     id: expense.id,
+    //     name: expense.name,
+    //     amount: expense.amount,
+    //     category: expense.category,
+    //     createdAt: expense.createdAt,
+    //     updatedAt: expense.updatedAt,
+    //   })
+    // );
 
     enteredExpenseName.current.value = "";
     enteredExpenseAmount.current.value = "";
