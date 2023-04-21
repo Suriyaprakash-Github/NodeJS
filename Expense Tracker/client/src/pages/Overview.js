@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import AddExpenseForm from "./../components/Expense/AddExpenseForm";
 import Sidebar from "../components/Layout/Sidebar";
 import classes from "../styles/Overview.module.css";
 import Chart from "../components/Analytics/Chart";
 import AllExpenses from "../components/Expense/AllExpenses";
 
-const Overview = (props) => {
+const Overview = () => {
+  const [addExpenseShow, setAddExpenseShow] = useState(false);
+
+  const showAddExpenseFormHandler = () => {
+    setAddExpenseShow(true);
+  };
+  const hideAddExpenseFormHandler = () => {
+    setAddExpenseShow(false);
+  };
+
   return (
     <>
       <div className={classes.overview_container}>
@@ -17,7 +27,11 @@ const Overview = (props) => {
             <div>Remaining Funds</div>
             <div>Total Income</div>
             <div>Total Expense</div>
-            <button onClick={props.onClick}>Add Expenses</button>
+
+            <button onClick={showAddExpenseFormHandler}>Add Expense</button>
+            {addExpenseShow && (
+              <AddExpenseForm onClose={hideAddExpenseFormHandler} />
+            )}
           </div>
 
           <div className={classes.overview_content_display}>

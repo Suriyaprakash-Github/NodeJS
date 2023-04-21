@@ -2,8 +2,9 @@ import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { expenseActions } from "../../store/expense-slice";
 import axios from "axios";
+import Modal from "../UI/Modal";
 
-const AddExpenseForm = () => {
+const AddExpenseForm = (props) => {
   const dispatch = useDispatch();
   const enteredExpenseName = useRef();
   const enteredExpenseAmount = useRef();
@@ -38,7 +39,7 @@ const AddExpenseForm = () => {
     enteredExpenseCategory.current.value = "";
   };
   return (
-    <>
+    <Modal onClose={props.onClose}>
       <div>
         <h1>Add Expense</h1>
         <form action="" onSubmit={addExpenseHandler}>
@@ -87,10 +88,13 @@ const AddExpenseForm = () => {
               <option value="Savings">Savings</option>
             </select>
           </div>
+          <button type="button" onClick={props.onClose}>
+            Close
+          </button>
           <button type="submit">Add Expense</button>
         </form>
       </div>
-    </>
+    </Modal>
   );
 };
 
