@@ -1,0 +1,67 @@
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+}
+.formHeader > button {
+  border: none;
+  background-color: white;
+}
+
+.formHeader > button:hover {
+  cursor: pointer;
+}
+
+.formHeader > button > img {
+  background-color: white;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+}
+.formControl {
+  padding: 1rem;
+}
+
+.formLabel {
+  font-size: 2rem;
+  padding-right: 1rem;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.formButtons > button {
+  font-size: 1.5rem;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+input {
+  border-radius: 1rem;
+  border-style: none;
+  border: 1px solid black;
+  height: 2rem;
+  width: 20rem;
+}
+select {
+  border-radius: 1rem;
+  border-style: none;
+  border: 1px solid black;
+  height: 2rem;
+  width: 20rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

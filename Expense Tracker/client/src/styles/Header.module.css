@@ -33,9 +33,8 @@
   color: rgb(107, 105, 105);
 }
 
-.searchBar > input:active {
-  border: none;
-  background-color: inherit;
+.searchBar > input:focus {
+  outline: none;
 }
 
 .header_navItems > button {

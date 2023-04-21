@@ -4,6 +4,7 @@ import Sidebar from "../components/Layout/Sidebar";
 import classes from "../styles/Overview.module.css";
 import Chart from "../components/Analytics/Chart";
 import AllExpenses from "../components/Expense/AllExpenses";
+import moneyBag from "./../assets/moneybag.svg";
 
 const Overview = () => {
   const [addExpenseShow, setAddExpenseShow] = useState(false);
@@ -28,7 +29,10 @@ const Overview = () => {
             <div>Total Income</div>
             <div>Total Expense</div>
 
-            <button onClick={showAddExpenseFormHandler}>Add Expense</button>
+            <button onClick={showAddExpenseFormHandler}>
+              Add Expense
+              <img className="icon" src={moneyBag} alt="addExpense" />
+            </button>
             {addExpenseShow && (
               <AddExpenseForm onClose={hideAddExpenseFormHandler} />
             )}

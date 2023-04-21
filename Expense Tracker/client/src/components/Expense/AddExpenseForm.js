@@ -3,6 +3,9 @@ import { useDispatch } from "react-redux";
 import { expenseActions } from "../../store/expense-slice";
 import axios from "axios";
 import Modal from "../UI/Modal";
+import classes from "./../../styles/AddExpenseForm.module.css";
+import deleteBtn from "./../../assets/delete.svg";
+import moneyIcon from "./../../assets/rupee.svg";
 
 const AddExpenseForm = (props) => {
   const dispatch = useDispatch();
@@ -41,11 +44,25 @@ const AddExpenseForm = (props) => {
   return (
     <Modal onClose={props.onClose}>
       <div>
-        <h1>Add Expense</h1>
-        <form action="" onSubmit={addExpenseHandler}>
-          <div>
-            <label htmlFor="expenseName">Expense: </label>
+        <div className={classes.formHeader}>
+          <h1>Add Expense</h1>
+          <button type="button" onClick={props.onClose}>
+            <img className="icon" src={deleteBtn} alt="" />
+          </button>
+        </div>
+        <hr />
+
+        <form
+          className={classes.formContainer}
+          action=""
+          onSubmit={addExpenseHandler}
+        >
+          <div className={classes.formControl}>
+            <label className={classes.formLabel} htmlFor="expenseName">
+              Expense:
+            </label>
             <input
+              className={classes.formInput}
               type="text"
               id="expenseName"
               name="expenseName"
@@ -53,9 +70,13 @@ const AddExpenseForm = (props) => {
               ref={enteredExpenseName}
             />
           </div>
-          <div>
-            <label htmlFor="expenseAmount">Amount: </label>
+          <div className={classes.formControl}>
+            <label className={classes.formLabel} htmlFor="expenseAmount">
+              Amount:
+            </label>
+
             <input
+              className={classes.formInput}
               type="number"
               id="expenseAmount"
               name="expenseAmount"
@@ -63,9 +84,12 @@ const AddExpenseForm = (props) => {
               ref={enteredExpenseAmount}
             />
           </div>
-          <div>
-            <label htmlFor="expenseCategory">Expense Category: </label>
+          <div className={classes.formControl}>
+            <label className={classes.formLabel} htmlFor="expenseCategory">
+              Expense Category:
+            </label>
             <select
+              className={classes.formInput}
               id="expenseCategory"
               name="expenseCategory"
               required
@@ -88,10 +112,12 @@ const AddExpenseForm = (props) => {
               <option value="Savings">Savings</option>
             </select>
           </div>
-          <button type="button" onClick={props.onClose}>
-            Close
-          </button>
-          <button type="submit">Add Expense</button>
+          <div className={classes.formButtons}>
+            <button type="button" onClick={props.onClose}>
+              Cancel
+            </button>
+            <button type="submit">Add Expense</button>
+          </div>
         </form>
       </div>
     </Modal>
