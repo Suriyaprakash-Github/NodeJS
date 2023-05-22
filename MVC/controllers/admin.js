@@ -1,6 +1,6 @@
 const Product = require("../models/product");
 
-exports.getAddProduct = (req, res, next) => {
+module.exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
@@ -8,40 +8,60 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
-exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
-  const price = req.body.price;
-  const description = req.body.description;
-  const product = new Product(null, title, imageUrl, description, price);
-  Product.create({
-    title: title,
-    price: price,
-    imageUrl: imageUrl,
-    description: description,
-  })
-    .then((res) => {
-      console.log(res);
+module.exports.postAddProduct = (req, res, next) => {
+  const productTitle = req.body.title;
+  const productPrice = req.body.price;
+  const productImageUrl = req.body.imageUrl;
+  const productDescription = req.body.description;
+  const userId = req.user.id;
+
+  // Product
+  //     .create({
+  //         title: productTitle,
+  //         price: productPrice,
+  //         imageUrl: productImageUrl,
+  //         description: productDescription,
+  //         userId: userId
+  //     })
+
+  // using assosiated model to create product
+  req.user
+    .createProduct({
+      title: productTitle,
+      price: productPrice,
+      imageUrl: productImageUrl,
+      description: productDescription,
+    })
+    .then((result) => {
       res.redirect("/admin/products");
     })
     .catch((err) => console.log(err));
 };
 
-exports.getEditProduct = (req, res, next) => {
+module.exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
-  if (!editMode) {
-    return res.redirect("/");
-  }
-  const prodId = req.params.productId;
+  if (!editMode) return res.redirect("/");
+  const productId = req.params.productId;
 
-  Product.findOne({ where: { id: prodId } })
-    .then((product) => {
-      if (!product) {
-        return res.redirect("/");
-      }
+  // Product
+  //     .findAll({
+  //         where: {
+  //             id: productId
+  //         }
+  //     })
+
+  // using associated model to get specified product
+  req.user
+    .getProducts({
+      where: {
+        id: productId,
+      },
+    })
+    .then((products) => {
+      const product = products[0];
       res.render("admin/edit-product", {
-        pageTitle: "Edit Product",
-        path: "/admin/edit-product",
+        pageTitle: product.title,
+        path: "/admin/products",
         editing: editMode,
         product: product,
       });
@@ -49,43 +69,64 @@ exports.getEditProduct = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postEditProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  const updatedTitle = req.body.title;
-  const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
-  const updatedDesc = req.body.description;
-  Product.findOne({ where: { id: prodId } })
+module.exports.postEditProduct = (req, res, next) => {
+  const productId = req.body.id;
+  const productTitle = req.body.title;
+  const productPrice = req.body.price;
+  const productImageUrl = req.body.imageUrl;
+  const productDescription = req.body.description;
+
+  Product.findByPk(productId)
     .then((product) => {
-      product.title = updatedTitle;
-      product.price = updatedPrice;
-      product.imageUrl = updatedImageUrl;
-      product.description = updatedDesc;
+      product.title = productTitle;
+      product.price = productPrice;
+      product.imageUrl = productImageUrl;
+      product.description = productDescription;
       return product.save();
     })
-    .then((res) => console.log("updated Product:", res))
+    .then((result) => {
+      res.redirect("/admin/products");
+    })
     .catch((err) => console.log(err));
-  res.redirect("/admin/products");
 };
 
-exports.getProducts = (req, res, next) => {
-  Product.findAll()
+module.exports.getProducts = (req, res, next) => {
+  // Product
+  //     .findAll()
+
+  // using associated model to get products
+  req.user
+    .getProducts()
     .then((products) => {
-      res.render("admin/products", {
-        prods: products,
-        pageTitle: "Admin Products",
+      res.render("admin/product-list", {
+        pageTitle: "All Products",
         path: "/admin/products",
+        products: products,
       });
     })
     .catch((err) => console.log(err));
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  Product.findOne({ where: { id: prodId } })
-    .then((product) => {
-      return product.destroy();
+module.exports.postDeleteProduct = (req, res, next) => {
+  const productId = req.body.productId;
+  Product.destroy({
+    where: {
+      id: productId,
+    },
+  })
+    .then((result) => {
+      res.redirect("/admin/products");
     })
-    .then(res.redirect("/admin/products"))
     .catch((err) => console.log(err));
+
+  // another method
+  // Product
+  //     .findByPk(productId)
+  //     .then(product => {
+  //         return product.destroy();
+  //     })
+  //     .then(result => {
+  //         res.redirect('/admin/products');
+  //     })
+  //     .catch(err => console.log(err));
 };
