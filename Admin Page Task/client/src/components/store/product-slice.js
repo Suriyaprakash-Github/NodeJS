@@ -17,17 +17,17 @@ const productSlice = createSlice({
       state.totalPrice = state.totalPrice + Number(action.payload.price);
     },
     deleteProduct(state, action) {
-      // let allProd;
       const toRemove = state.products.findIndex(
         (prod) => prod.id === action.payload.id
       );
       state.products.splice(toRemove, 1);
-      // allProd = [...state.products];
       state.totalPrice = state.totalPrice - Number(action.payload.price);
     },
-    // deleteAll(state, action) {
-    //   state.products = [];
-    // },
+    deleteAll(state, action) {
+      console.log("inside slice delete");
+      state.products = [];
+      state.totalPrice = 0;
+    },
   },
 });
 

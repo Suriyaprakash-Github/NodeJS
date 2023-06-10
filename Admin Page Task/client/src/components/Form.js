@@ -1,10 +1,15 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { productActions } from "./store/product-slice";
+import { getAllProducts } from "./store/product-actions";
 
 const Form = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
 
   const nameRef = useRef();
   const priceRef = useRef();

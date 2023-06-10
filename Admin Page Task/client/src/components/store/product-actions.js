@@ -6,6 +6,7 @@ export const getAllProducts = () => {
     return await axios
       .get("http://localhost:4000/product/getProduct")
       .then((result) => {
+        dispatch(productActions.deleteAll());
         result.data.map((prod) =>
           dispatch(
             productActions.addProduct({
@@ -19,28 +20,3 @@ export const getAllProducts = () => {
       .catch((err) => console.log("err getting all prods", err));
   };
 };
-
-// export const deleteAll = () => {
-//   return (dispatch) => {
-//     dispatch(productActions.deleteAll());
-//   };
-// };
-
-// export const deleteProduct = () => {
-//   return async (dispatch) => {
-//     return await axios
-//       .get("http://localhost:4000/product/deleteProduct")
-//       .then((result) => {
-//         result.data.map((prod) =>
-//           dispatch(
-//             productActions.deleteProduct({
-//               id: prod.id,
-//               name: prod.name,
-//               price: prod.price,
-//             })
-//           )
-//         );
-//       })
-//       .catch((err) => console.log("err deleting prod", err));
-//   };
-// };
