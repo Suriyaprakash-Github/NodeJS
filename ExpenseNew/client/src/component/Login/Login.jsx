@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import classes from "../../styles/Login.module.css";
+import axios from "axios";
 
 const Login = () => {
   const usernameRef = useRef();
@@ -7,17 +8,26 @@ const Login = () => {
   const passwordRef = useRef();
 
   const [loginSwitch, setLoginSwitch] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const loginSwitchHandler = () => {
     setLoginSwitch((prev) => !prev);
   };
 
-  const formSubmitHandler = (e) => {
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(
-      usernameRef.current.value,
-      emailRef.current.value,
-      passwordRef.current.value
-    );
+
+    await axios
+      .post("http://localhost:4000/user/signup", {
+        username: usernameRef.current.value,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      })
+      .then((result) => console.log(result))
+      .catch((err) => {
+        setErrorMessage(err.response.data);
+        console.log(err);
+      });
   };
 
   return (
@@ -69,6 +79,7 @@ const Login = () => {
             )}
           </div>
         </form>
+        {errorMessage && <p>{errorMessage}</p>}
         {loginSwitch ? (
           <p>
             Don't have an account?
