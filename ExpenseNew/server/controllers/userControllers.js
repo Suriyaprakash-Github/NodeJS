@@ -1,5 +1,6 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
   username = req.body.username;
@@ -37,6 +38,10 @@ exports.signup = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+function tokenGenerator(id, name) {
+  return jwt.sign({ userId: id, name: name }, "secretkey");
+}
+
 exports.login = (req, res, next) => {
   username = req.body.username;
   email = req.body.email;
@@ -65,7 +70,13 @@ exports.login = (req, res, next) => {
         if (!isPasswordCorrect) {
           return res.status(401).json({ error: "user not authorized" });
         } else {
-          return res.status(201).json({ message: "logged in" });
+          return res.status(201).json({
+            message: "logged in",
+            token: tokenGenerator(
+              result.dataValues.id,
+              result.dataValues.username
+            ),
+          });
         }
       }
     })

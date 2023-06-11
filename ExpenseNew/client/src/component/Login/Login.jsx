@@ -41,6 +41,8 @@ const Login = () => {
         })
         .then((result) => {
           setSuccessMessage(result.data.message);
+          console.log(result);
+          localStorage.setItem("token", result.data.token);
           navigate("/expense");
         })
         .catch((err) => {

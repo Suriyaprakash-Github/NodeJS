@@ -1,9 +1,11 @@
 const ExpenseModel = require("./../models/expenseModel");
 
 exports.addNewExpense = (req, res, next) => {
+  console.log(req);
   expense = req.body.expense;
   category = req.body.category;
   cost = req.body.cost;
+  // userId=req.body.i
 
   ExpenseModel.create({
     expense,
@@ -28,7 +30,7 @@ exports.deleteExpense = (req, res, next) => {
 };
 
 exports.allExpense = (req, res, next) => {
-  ExpenseModel.findAll()
+  ExpenseModel.findAll({ where: { userId: req.user.id } })
     .then((result) => {
       return res.json(result);
     })

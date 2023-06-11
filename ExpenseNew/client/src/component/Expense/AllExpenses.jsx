@@ -7,14 +7,18 @@ const AllExpenses = () => {
   const navigate = useNavigate();
 
   const allExpenseHandler = async (e) => {
+    const token = localStorage.getItem("token");
+
     await axios
-      .get("http://localhost:4000/expense/allexpenses")
+      .get("http://localhost:4000/expense/allexpenses", {
+        headers: { Authorization: token },
+      })
       .then((result) => setAllExpense(result.data))
       .catch((err) => console.log(err));
   };
 
   const deleteHandler = async (id) => {
-    console.log(id);
+    // console.log(id);
     await axios
       .post("http://localhost:4000/expense/delete", { id })
       .then((result) => {
