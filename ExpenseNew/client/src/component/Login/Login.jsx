@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
 import classes from "../../styles/Login.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  const navigate = useNavigate();
 
   const [loginSwitch, setLoginSwitch] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,7 +39,10 @@ const Login = () => {
           email: emailRef.current.value,
           password: passwordRef.current.value,
         })
-        .then((result) => setSuccessMessage(result.data.message))
+        .then((result) => {
+          setSuccessMessage(result.data.message);
+          navigate("/expense");
+        })
         .catch((err) => {
           setErrorMessage(err.response.data.error);
           console.log(err);
