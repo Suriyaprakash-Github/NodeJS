@@ -9,6 +9,7 @@ const Login = () => {
 
   const [loginSwitch, setLoginSwitch] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const loginSwitchHandler = () => {
     setLoginSwitch((prev) => !prev);
@@ -23,7 +24,7 @@ const Login = () => {
         email: emailRef.current.value,
         password: passwordRef.current.value,
       })
-      .then((result) => console.log(result))
+      .then((result) => setSuccessMessage(result.data.message))
       .catch((err) => {
         setErrorMessage(err.response.data);
         console.log(err);
@@ -33,6 +34,8 @@ const Login = () => {
   return (
     <>
       <div className={classes.loginContainer}>
+        {loginSwitch ? <h2>Login</h2> : <h2>Signup</h2>}
+
         <form
           action=""
           onSubmit={formSubmitHandler}
@@ -80,6 +83,7 @@ const Login = () => {
           </div>
         </form>
         {errorMessage && <p>{errorMessage}</p>}
+        {successMessage && <p>{successMessage}</p>}
         {loginSwitch ? (
           <p>
             Don't have an account?
