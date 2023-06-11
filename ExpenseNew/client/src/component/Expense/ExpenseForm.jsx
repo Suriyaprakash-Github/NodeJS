@@ -12,8 +12,15 @@ const ExpenseForm = () => {
     const category = catergoryRef.current.value;
     const cost = costRef.current.value;
 
+    const token = localStorage.getItem("token");
+    // const expenseDetail = {
+    //   expense: expenseRef.current.value,
+    //   category: catergoryRef.current.value,
+    //   cost: costRef.current.value,
+    // };
     await axios
       .post("http://localhost:4000/expense/addexpense", {
+        headers: { Authorization: token },
         expense,
         category,
         cost,

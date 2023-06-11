@@ -1,16 +1,18 @@
 const ExpenseModel = require("./../models/expenseModel");
+const jwt = require("jsonwebtoken");
 
 exports.addNewExpense = (req, res, next) => {
-  console.log(req);
   expense = req.body.expense;
   category = req.body.category;
   cost = req.body.cost;
-  // userId=req.body.i
+  const token = req.body.headers.Authorization;
+  const user = jwt.verify(token, "secretkey");
 
   ExpenseModel.create({
     expense,
     category,
     cost,
+    userId: user.userId,
   })
     .then(() => {
       return res.status(201).json({ message: "expense added" });
