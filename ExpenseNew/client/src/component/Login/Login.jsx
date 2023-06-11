@@ -17,18 +17,31 @@ const Login = () => {
 
   const formSubmitHandler = async (e) => {
     e.preventDefault();
-
-    await axios
-      .post("http://localhost:4000/user/signup", {
-        username: usernameRef.current.value,
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((result) => setSuccessMessage(result.data.message))
-      .catch((err) => {
-        setErrorMessage(err.response.data);
-        console.log(err);
-      });
+    if (!loginSwitch) {
+      await axios
+        .post("http://localhost:4000/user/signup", {
+          username: usernameRef.current.value,
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+        })
+        .then((result) => setSuccessMessage(result.data.message))
+        .catch((err) => {
+          setErrorMessage(err.response.data);
+          console.log(err);
+        });
+    } else {
+      await axios
+        .post("http://localhost:4000/user/login", {
+          username: usernameRef.current.value,
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+        })
+        .then((result) => setSuccessMessage(result.data.message))
+        .catch((err) => {
+          setErrorMessage(err.response.data.error);
+          console.log(err);
+        });
+    }
   };
 
   return (
