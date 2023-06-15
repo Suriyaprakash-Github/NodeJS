@@ -40,7 +40,7 @@ const Login = () => {
           password: passwordRef.current.value,
         })
         .then((result) => {
-          setSuccessMessage(result.data.message);
+          // setSuccessMessage(result.data.message);
           console.log(result);
           localStorage.setItem("token", result.data.token);
           navigate("/expense");

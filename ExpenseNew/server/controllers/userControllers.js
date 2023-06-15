@@ -38,8 +38,8 @@ exports.signup = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-function tokenGenerator(id, name) {
-  return jwt.sign({ userId: id, name: name }, "secretkey");
+function tokenGenerator(id, email) {
+  return jwt.sign({ userId: id, email: email }, "secretkey");
 }
 
 exports.login = (req, res, next) => {
@@ -74,7 +74,7 @@ exports.login = (req, res, next) => {
             message: "logged in",
             token: tokenGenerator(
               result.dataValues.id,
-              result.dataValues.username
+              result.dataValues.email
             ),
           });
         }
