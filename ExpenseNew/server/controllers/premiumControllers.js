@@ -1,7 +1,6 @@
-// const Sequelize = require("sequelize");
-// // const OrderModel = require("../models/orderModel");
-// const UserModel = require("../models/userModel");
-// const ExpenseModel = require("./../models/expenseModel");
+const sequelize = require("sequelize");
+const UserModel = require("../models/userModel");
+const ExpenseModel = require("./../models/expenseModel");
 
 // exports.leaderboard = async (req, res, next) => {
 //   await ExpenseModel.findAll({
@@ -21,25 +20,35 @@
 //     .catch((err) => console.log(err));
 // };
 
-const sequelize = require("./../databases/db");
-const UserModel = require("../models/userModel");
-const ExpenseModel = require("./../models/expenseModel");
+// grouping:
 
 exports.leaderboard = async (req, res, next) => {
-  await ExpenseModel.findAll({
-    attributes: [
-      "userId",
-      [sequelize.fn("sum", sequelize.col("cost")), "totalCost"],
-    ],
-    include: {
-      model: UserModel,
-      attributes: ["email"],
-      required: true,
-    },
-    group: "userId",
+  // await ExpenseModel.findAll({
+  //   attributes: [
+  //     "userId",
+  //     [sequelize.fn("sum", sequelize.col("cost")), "totalCost"],
+  //   ],
+  //   include: {
+  //     model: UserModel,
+  //     attributes: ["email"],
+  //     required: true,
+  //   },
+  //   group: "userId",
+  // })
+  //   .then((result) => {
+  //     return res.json(result);
+  //   })
+  //   .catch((err) => console.log(err));
+
+  await User.findAll({
+    attributes: ["email", "totalExpenses"],
   })
-    .then((result) => {
-      return res.json(result);
+    .then((data) => {
+      const jsonData = JSON.parse(JSON.stringify(data));
+
+      jsonData.sort((a, b) => b.totalExpenses - a.totalExpenses);
+      console.log(jsonData);
+      res.json(jsonData);
     })
-    .catch((err) => console.log(err));
+    .catch((e) => console.log(e));
 };

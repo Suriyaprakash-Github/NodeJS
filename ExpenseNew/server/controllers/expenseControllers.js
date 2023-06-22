@@ -1,19 +1,36 @@
 const ExpenseModel = require("./../models/expenseModel");
+const UserModel = require("./../models/userModel");
+const sequelize = require("./../databases/db");
 const jwt = require("jsonwebtoken");
 
-exports.addNewExpense = (req, res, next) => {
+exports.addNewExpense = async (req, res, next) => {
   expense = req.body.expense;
   category = req.body.category;
   cost = req.body.cost;
   const token = req.body.headers.Authorization;
   const user = jwt.verify(token, "secretkey");
 
-  ExpenseModel.create({
-    expense,
-    category,
-    cost,
-    userId: user.userId,
+  const tran = await sequelize.transaction();
+
+  ExpenseModel.create(
+    {
+      expense,
+      category,
+      cost,
+      userId: user.userId,
+    },
+    {
+      transaction: tran,
+    }
+  );
+  UserModel.findByPk(user.userId, {
+    transaction: tran,
   })
+    .then((data) => {
+      data.totalExpenses += parseInt(cost);
+      data.save();
+      tran.commit();
+    })
     .then(() => {
       return res.status(201).json({ message: "expense added" });
     })
