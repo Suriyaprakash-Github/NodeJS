@@ -7,6 +7,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const ExpenseModel = require("./models/expenseModel");
 const UserModel = require("./models/userModel");
 const OrderModel = require("./models/orderModel");
+const premiumRoutes = require("./routes/premiumRoutes");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use(orderRoutes);
+app.use(premiumRoutes);
 
 ExpenseModel.belongsTo(UserModel, { constraints: true, onDelete: "CASCADE" });
 UserModel.hasMany(ExpenseModel);

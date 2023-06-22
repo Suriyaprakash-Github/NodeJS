@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const script = document.createElement("script");
 script.src = "https://checkout.razorpay.com/v1/checkout.js";
 document.body.appendChild(script);
 
 const Profile = () => {
+  const [leaderboardSorted, setLeaderboardSorted] = useState([]);
   const token = localStorage.getItem("token");
 
   const premiumPurchaseHandler = async (e) => {
@@ -15,7 +17,6 @@ const Profile = () => {
         headers: { Authorization: token },
       })
       .then((result) => {
-        // console.log(result);
         data = result.data;
       })
       .catch((err) => console.log("error from fetch backend", err));
@@ -40,9 +41,7 @@ const Profile = () => {
             status: "successful",
           })
           .then((result) => {
-            // console.log(result);
-            // data = result.data;
-            // console.log("data", data);
+            localStorage.setItem("token", result.data.token);
           })
           .catch((err) => console.log("error posting premium updation", err));
       },
@@ -55,14 +54,6 @@ const Profile = () => {
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
     paymentObject.on("payment.failed", async function (response) {
-      // alert(response.error.code);
-      // alert(response.error.description);
-      // alert(response.error.source);
-      // alert(response.error.step);
-      // alert(response.error.reason);
-      // alert(response.error.metadata.order_id);
-      // alert(response.error.metadata.payment_id);
-      // console.log("failed order id", response.error.metadata.order_id);
       const razorpay_payment_id = response.error.metadata.payment_id;
       const razorpay_order_id = response.error.metadata.order_id;
 
@@ -71,23 +62,44 @@ const Profile = () => {
           headers: { Authorization: token },
           razorpay_payment_id,
           razorpay_order_id,
-          // razorpay_signature,
           status: "failed",
         })
-        .then((result) => {
-          // console.log(result);
-          // data = result.data;
-          // console.log("data", data);
-        })
+        .then((result) => {})
         .catch((err) => console.log("error posting premium updation", err));
     });
   };
+  const decoded = jwt_decode(token);
+  console.log(decoded.isPremiumUser);
 
+  const leaderBoardHandler = async () => {
+    await axios
+      .get("http://localhost:4000/premium/leaderboard")
+      .then((result) => setLeaderboardSorted(result.data))
+      .catch((err) => console.log(err));
+  };
+  console.log(leaderboardSorted);
   return (
     <>
       <div>
-        <button onClick={premiumPurchaseHandler}>Buy Premium</button>
+        {decoded.isPremiumUser ? (
+          <p>You are a premium User</p>
+        ) : (
+          <button onClick={premiumPurchaseHandler}>Buy Premium</button>
+        )}
       </div>
+      {decoded.isPremiumUser && (
+        <div>
+          <button onClick={leaderBoardHandler}>Leader Board</button>
+        </div>
+      )}
+
+      {leaderboardSorted.map((leaderboard) => (
+        <div key={Math.random()}>
+          <span>{leaderboard.category}---</span>
+          <span>{leaderboard.cost}---</span>
+          <span>{leaderboard.user.email}</span>
+        </div>
+      ))}
     </>
   );
 };

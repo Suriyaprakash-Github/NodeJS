@@ -38,8 +38,11 @@ exports.signup = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-function tokenGenerator(id, email) {
-  return jwt.sign({ userId: id, email: email }, "secretkey");
+function tokenGenerator(id, email, isPremiumUser) {
+  return jwt.sign(
+    { userId: id, email: email, isPremiumUser: isPremiumUser },
+    "secretkey"
+  );
 }
 
 exports.login = (req, res, next) => {
@@ -74,7 +77,8 @@ exports.login = (req, res, next) => {
             message: "logged in",
             token: tokenGenerator(
               result.dataValues.id,
-              result.dataValues.email
+              result.dataValues.email,
+              result.dataValues.isPremiumUser
             ),
           });
         }

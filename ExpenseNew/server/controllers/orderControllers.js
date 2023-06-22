@@ -8,6 +8,12 @@ const razorpay = new Razorpay({
   key_id: process.env.key_id,
   key_secret: process.env.key_secret,
 });
+function tokenGenerator(id, email, isPremiumUser) {
+  return jwt.sign(
+    { userId: id, email: email, isPremiumUser: isPremiumUser },
+    "secretkey"
+  );
+}
 
 exports.purchasePremiun = async (req, res, next) => {
   const token = req.body.headers.Authorization;
@@ -26,7 +32,7 @@ exports.purchasePremiun = async (req, res, next) => {
         amount: response.amount,
       });
     })
-    .then((result) => console.log(result))
+    .then((result) => {})
     .catch((err) => console.log(err));
 };
 
@@ -37,7 +43,6 @@ exports.updatePremium = (req, res, next) => {
 
   const paymentId = req.body.razorpay_payment_id;
   const orderId = req.body.razorpay_order_id;
-  // const signature = req.body.razorpay_signature;
   const status = req.body.status;
 
   OrderModel.create({
@@ -47,7 +52,20 @@ exports.updatePremium = (req, res, next) => {
     userId: user.userId,
   })
     .then(() => {
-      UserModel.update({ isPremiumUser: 1 }, { where: { id: user.userId } });
+      if (status !== "failed") {
+        UserModel.update(
+          { isPremiumUser: 1 },
+          { where: { id: user.userId } }
+        ).then(() => {
+          return res.status(201).json({
+            token: tokenGenerator(
+              user.userId,
+              user.email,
+              (user.isPremiumUser = true)
+            ),
+          });
+        });
+      }
     })
     .catch((err) => console.log("premum updation failed", err));
 };
