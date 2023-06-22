@@ -74,7 +74,10 @@ const Profile = () => {
   const leaderBoardHandler = async () => {
     await axios
       .get("http://localhost:4000/premium/leaderboard")
-      .then((result) => setLeaderboardSorted(result.data))
+      .then(
+        (result) => setLeaderboardSorted(result.data)
+        // console.log(result)
+      )
       .catch((err) => console.log(err));
   };
   console.log(leaderboardSorted);
@@ -95,9 +98,8 @@ const Profile = () => {
 
       {leaderboardSorted.map((leaderboard) => (
         <div key={Math.random()}>
-          <span>{leaderboard.category}---</span>
-          <span>{leaderboard.cost}---</span>
-          <span>{leaderboard.user.email}</span>
+          <span>{leaderboard.user.email}---</span>
+          <span>{leaderboard.totalCost}</span>
         </div>
       ))}
     </>
