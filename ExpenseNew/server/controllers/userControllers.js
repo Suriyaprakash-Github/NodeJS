@@ -2,7 +2,9 @@ const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-exports.signup = (req, res, next) => {
+exports.signup = async (req, res, next) => {
+  const tran = await sequelize.transaction();
+
   username = req.body.username;
   email = req.body.email;
   password = req.body.password;
@@ -23,19 +25,26 @@ exports.signup = (req, res, next) => {
       if (result === null) {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
-        UserModel.create({
-          username: username,
-          email: email,
-          password: hash,
-        });
+        UserModel.create(
+          {
+            username: username,
+            email: email,
+            password: hash,
+          },
+          { transaction: tran }
+        );
       } else {
         res.status(409).json("Email already registered !");
       }
     })
-    .then(() => {
+    .then(async () => {
+      await tran.commit();
       return res.status(201).json({ message: "user Created !!" });
     })
-    .catch((err) => console.log(err));
+    .catch(async (err) => {
+      await tran.rollback();
+      console.log(err);
+    });
 };
 
 function tokenGenerator(id, email, isPremiumUser) {

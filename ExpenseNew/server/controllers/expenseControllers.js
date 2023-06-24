@@ -37,15 +37,35 @@ exports.addNewExpense = async (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.deleteExpense = (req, res, next) => {
+exports.deleteExpense = async (req, res, next) => {
+  const tran = await sequelize.transaction();
+  let userId = req.body.id;
+  console.log(">>>>>>>>>" + userId);
+  await ExpenseModel.findByPk(userId).then(async (data) => {
+    console.log("got data from here" + data);
+    if (data.dataValues.userId === req.user.id) {
+      UserModel.findByPk(req.user.id).then(async (Userdata) => {
+        Userdata.total -= parseInt(data.amount);
+        await tran.commit();
+      });
+    }
+  });
+
   id = req.body.id;
-  ExpenseModel.destroy({
-    where: { id: id },
-  })
+  ExpenseModel.destroy(
+    {
+      where: { id: id },
+    },
+    { transaction: tran }
+  )
     .then((result) => {
+      tran.commit();
       return res.json(result);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      tran.rollback();
+      console.log(err);
+    });
 };
 
 exports.allExpense = (req, res, next) => {

@@ -36,7 +36,9 @@ exports.purchasePremiun = async (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.updatePremium = (req, res, next) => {
+exports.updatePremium = async (req, res, next) => {
+  const tran = await sequelize.transaction();
+
   const token = req.body.headers.Authorization;
   console.log(token);
   const user = jwt.verify(token, "secretkey");
@@ -45,18 +47,27 @@ exports.updatePremium = (req, res, next) => {
   const orderId = req.body.razorpay_order_id;
   const status = req.body.status;
 
-  OrderModel.create({
-    paymentId,
-    orderId,
-    status,
-    userId: user.userId,
-  })
-    .then(() => {
+  OrderModel.create(
+    {
+      paymentId,
+      orderId,
+      status,
+      userId: user.userId,
+    },
+    {
+      transaction: tran,
+    }
+  )
+    .then(async () => {
       if (status !== "failed") {
         UserModel.update(
           { isPremiumUser: 1 },
-          { where: { id: user.userId } }
-        ).then(() => {
+          { where: { id: user.userId } },
+          {
+            transaction: tran,
+          }
+        ).then(async () => {
+          await tran.commit();
           return res.status(201).json({
             token: tokenGenerator(
               user.userId,
@@ -67,5 +78,8 @@ exports.updatePremium = (req, res, next) => {
         });
       }
     })
-    .catch((err) => console.log("premum updation failed", err));
+    .catch(async (err) => {
+      tran.rollback();
+      console.log("premum updation failed", err);
+    });
 };
