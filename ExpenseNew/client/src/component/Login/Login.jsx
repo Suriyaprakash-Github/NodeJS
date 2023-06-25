@@ -61,7 +61,7 @@ const Login = () => {
   const passwordResetHandler = async (e) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:4000/user/resetpassword", {
+      .post("http://localhost:4000/user/forgotpassword", {
         email: forgotemail.current.value,
       })
       .then((result) => console.log(result))

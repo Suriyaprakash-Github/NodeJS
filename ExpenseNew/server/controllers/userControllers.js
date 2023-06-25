@@ -1,9 +1,11 @@
 const UserModel = require("../models/userModel");
+const PasswordResetModel = require("./../models/resetPasswordReq");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sequelize = require("./../databases/db");
 const Sib = require("sib-api-v3-sdk");
 require("dotenv").config();
+const uuid = require("uuid");
 
 exports.signup = async (req, res, next) => {
   const tran = await sequelize.transaction();
@@ -101,13 +103,20 @@ exports.login = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.resetpassword = (req, res, next) => {
+exports.forgotpassword = (req, res, next) => {
   const email = req.body.email;
-  UserModel.findOne({ where: { email: email } }).then((result) => {
+  UserModel.findOne({ where: { email: email } }).then(async (result) => {
     if (result === null) {
       res.status(404).json({ error: "user not found" });
     } else {
-      // console.log(email);
+      const userId = result.dataValues.id;
+      const id = uuid.v4();
+      await PasswordResetModel.create({
+        id: id,
+        isActive: true,
+        userId: userId,
+      });
+
       const client = Sib.ApiClient.instance;
       const apiKey = client.authentications["api-key"];
       apiKey.apiKey = process.env.sendinblue;
@@ -124,6 +133,7 @@ exports.resetpassword = (req, res, next) => {
           to: receiver,
           subject: "Password Reset Link for ExpenseApp",
           textContent: "dummy ",
+          htmlContent: `<a href="http://localhost:4000/password/resetpassword/${id}">Reset password</a>`,
         })
         .then((result) => {
           console.log;
