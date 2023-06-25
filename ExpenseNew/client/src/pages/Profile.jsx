@@ -8,6 +8,8 @@ document.body.appendChild(script);
 
 const Profile = () => {
   const [leaderboardSorted, setLeaderboardSorted] = useState([]);
+  const [allExpense, setAllExpense] = useState([]);
+
   const token = localStorage.getItem("token");
 
   const premiumPurchaseHandler = async (e) => {
@@ -80,7 +82,17 @@ const Profile = () => {
       )
       .catch((err) => console.log(err));
   };
-  console.log(leaderboardSorted);
+  // console.log(leaderboardSorted);
+  const allExpenseHandler = async (e) => {
+    const token = localStorage.getItem("token");
+
+    await axios
+      .get("http://localhost:4000/expense/allexpenses", {
+        headers: { Authorization: token },
+      })
+      .then((result) => setAllExpense(result.data))
+      .catch((err) => console.log(err));
+  };
   return (
     <>
       <div>
@@ -100,6 +112,30 @@ const Profile = () => {
         <div key={Math.random()}>
           <span>{leaderboard.user.email}---</span>
           <span>{leaderboard.totalCost}</span>
+          {decoded.isPremiumUser && (
+            <div>
+              <button onClick={allExpenseHandler}>All Expenses</button>
+            </div>
+          )}
+          <table>
+            <thead>
+              <tr>
+                <th>Expense</th>
+                <th>Category</th>
+                <th>Cost</th>
+              </tr>
+            </thead>
+          </table>
+
+          {allExpense.map((expense) => (
+            <tbody key={expense.id}>
+              <tr>
+                <td>{expense.expense}</td>
+                <td>{expense.category}</td>
+                <td>{expense.cost}</td>
+              </tr>
+            </tbody>
+          ))}
         </div>
       ))}
     </>
