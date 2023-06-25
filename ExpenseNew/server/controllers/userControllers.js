@@ -1,6 +1,9 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sequelize = require("./../databases/db");
+const Sib = require("sib-api-v3-sdk");
+require("dotenv").config();
 
 exports.signup = async (req, res, next) => {
   const tran = await sequelize.transaction();
@@ -21,11 +24,11 @@ exports.signup = async (req, res, next) => {
   }
 
   UserModel.findOne({ where: { email: email } })
-    .then((result) => {
+    .then(async (result) => {
       if (result === null) {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
-        UserModel.create(
+        await UserModel.create(
           {
             username: username,
             email: email,
@@ -38,8 +41,9 @@ exports.signup = async (req, res, next) => {
       }
     })
     .then(async () => {
-      await tran.commit();
-      return res.status(201).json({ message: "user Created !!" });
+      await tran.commit().then(async () => {
+        return res.status(201).json({ message: "user Created !!" });
+      });
     })
     .catch(async (err) => {
       await tran.rollback();
@@ -95,4 +99,36 @@ exports.login = (req, res, next) => {
     })
 
     .catch((err) => console.log(err));
+};
+
+exports.resetpassword = (req, res, next) => {
+  const email = req.body.email;
+  UserModel.findOne({ where: { email: email } }).then((result) => {
+    if (result === null) {
+      res.status(404).json({ error: "user not found" });
+    } else {
+      // console.log(email);
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.sendinblue;
+
+      const tranEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: "yoursgump@gmail.com",
+        name: "admin",
+      };
+      const receiver = [{ email: email }];
+      tranEmailApi
+        .sendTransacEmail({
+          sender,
+          to: receiver,
+          subject: "Password Reset Link for ExpenseApp",
+          textContent: "dummy ",
+        })
+        .then((result) => {
+          console.log;
+        })
+        .catch((err) => console.log(err));
+    }
+  });
 };
