@@ -3,6 +3,7 @@ const Razorpay = require("razorpay");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
+const sequelize = require("./../databases/db");
 
 const razorpay = new Razorpay({
   key_id: process.env.key_id,
@@ -37,7 +38,7 @@ exports.purchasePremiun = async (req, res, next) => {
 };
 
 exports.updatePremium = async (req, res, next) => {
-  const tran = await sequelize.transaction();
+  // const tran = await sequelize.transaction();
 
   const token = req.body.headers.Authorization;
   console.log(token);
@@ -47,27 +48,30 @@ exports.updatePremium = async (req, res, next) => {
   const orderId = req.body.razorpay_order_id;
   const status = req.body.status;
 
-  OrderModel.create(
+  await OrderModel.create(
     {
       paymentId,
       orderId,
       status,
       userId: user.userId,
-    },
-    {
-      transaction: tran,
     }
+    // {
+    //   transaction: tran,
+    // }
   )
     .then(async () => {
       if (status !== "failed") {
-        UserModel.update(
+        // await tran.commit();
+
+        await UserModel.update(
           { isPremiumUser: 1 },
-          { where: { id: user.userId } },
-          {
-            transaction: tran,
-          }
+          { where: { id: user.userId } }
+          // {
+          //   transaction: tran,
+          // }
         ).then(async () => {
-          await tran.commit();
+          // await tran.commit();
+
           return res.status(201).json({
             token: tokenGenerator(
               user.userId,
@@ -79,7 +83,7 @@ exports.updatePremium = async (req, res, next) => {
       }
     })
     .catch(async (err) => {
-      tran.rollback();
+      // tran.rollback();
       console.log("premum updation failed", err);
     });
 };

@@ -93,6 +93,15 @@ const Profile = () => {
       .then((result) => setAllExpense(result.data))
       .catch((err) => console.log(err));
   };
+
+  const downloadHandler = async (e) => {
+    await axios
+      .get("http://localhost:4000/downloadexpense", {
+        headers: { Authorization: localStorage.getItem("token") },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
   return (
     <>
       <div>
@@ -138,6 +147,7 @@ const Profile = () => {
           ))}
         </div>
       ))}
+      <button onClick={downloadHandler}>Download Expense</button>
     </>
   );
 };
