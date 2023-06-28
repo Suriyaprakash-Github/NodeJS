@@ -25,32 +25,31 @@ exports.signup = async (req, res, next) => {
     res.status(400).json({ error: "something is missing" });
   }
 
-  UserModel.findOne({ where: { email: email } })
-    .then(async (result) => {
-      if (result === null) {
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
-        await UserModel.create(
-          {
-            username: username,
-            email: email,
-            password: hash,
-          },
-          { transaction: tran }
-        );
-      } else {
-        res.status(409).json("Email already registered !");
-      }
-    })
-    .then(async () => {
-      await tran.commit().then(async () => {
-        return res.status(201).json({ message: "user Created !!" });
-      });
-    })
-    .catch(async (err) => {
-      await tran.rollback();
-      console.log(err);
-    });
+  UserModel.findOne({ where: { email: email } }).then(async (result) => {
+    if (result === null) {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+      await UserModel.create(
+        {
+          username: username,
+          email: email,
+          password: hash,
+        },
+        { transaction: tran }
+      )
+        .then(async () => {
+          await tran.commit().then(async () => {
+            return res.status(201).json({ message: "user Created !!" });
+          });
+        })
+        .catch(async (err) => {
+          await tran.rollback();
+          console.log(err);
+        });
+    } else {
+      res.status(409).json("Email already registered !");
+    }
+  });
 };
 
 function tokenGenerator(id, email, isPremiumUser) {
