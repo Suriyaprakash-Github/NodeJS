@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const fs = require("fs");
 const cors = require("cors");
 const sequelize = require("./databases/db");
 const userRoutes = require("./routes/userRoutes");
@@ -10,10 +12,23 @@ const OrderModel = require("./models/orderModel");
 const premiumRoutes = require("./routes/premiumRoutes");
 const PasswordResetModel = require("./models/resetPasswordReq");
 const passwordRoutes = require("./routes/passwordRoutes");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const compression = require("compression");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+app.use(helmet());
+app.use(morgan("combined", { stream: accessLogStream }));
+app.use(compression());
+
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use(orderRoutes);
@@ -28,6 +43,4 @@ UserModel.hasMany(PasswordResetModel);
 
 sequelize.sync().then().catch();
 
-app.listen(4000, () => {
-  console.log("Server running on Port 4000");
-});
+app.listen(process.env.PORT || 4000);
