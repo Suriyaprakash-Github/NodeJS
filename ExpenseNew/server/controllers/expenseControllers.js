@@ -68,10 +68,52 @@ exports.deleteExpense = async (req, res, next) => {
     });
 };
 
-exports.allExpense = (req, res, next) => {
-  ExpenseModel.findAll({ where: { userId: req.user.id } })
-    .then((result) => {
-      return res.json(result);
-    })
-    .catch((err) => console.log(err));
+exports.allExpense = async (req, res, next) => {
+  const numberOfExpenses = req.query.numberOfExpenses;
+  const currentPage = req.query.page;
+  // console.log(currentPage);
+  const offset = numberOfExpenses * currentPage;
+  let offsetRows;
+  if (offset < 0) {
+    offsetRows = 0;
+  } else {
+    offsetRows = offset;
+  }
+  const id = req.user.id;
+
+  const totalCount = await ExpenseModel.count({
+    where: { userId: id },
+    col: "cost",
+  });
+
+  if (numberOfExpenses !== "all") {
+    await sequelize
+      .query(
+        `SELECT * FROM expenses WHERE userId=${id} LIMIT ${offsetRows}, ${numberOfExpenses}`,
+        {
+          model: ExpenseModel,
+        }
+      )
+      .then((result) => {
+        return res.json({
+          result,
+          hasNextPage: 0,
+          hasPreviousPage: 0,
+        });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    await sequelize
+      .query(`SELECT * FROM expenses WHERE userId=${id}`, {
+        model: ExpenseModel,
+      })
+      .then((result) => {
+        return res.json({
+          result,
+          hasNextPage: 0,
+          hasPreviousPage: 0,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 };
