@@ -3,28 +3,53 @@ import axios from "axios";
 import classes from "./../styles/Login.module.css";
 
 const Login = () => {
+  const [loginSwitch, setLoginSwitch] = useState(false);
+  // const [message, setMessage] = useState("");
+
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const phoneRef = useRef();
 
-  const [loginSwitch, setLoginSwitch] = useState(false);
   const loginSwitchHandler = () => {
     setLoginSwitch((prev) => !prev);
   };
 
   const formSubmitHandler = async (e) => {
     e.preventDefault();
-
-    await axios
-      .post("http://localhost:4000/user/signup", {
-        username: usernameRef.current.value,
-        email: emailRef.current.value,
-        phone: phoneRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err));
+    if (!loginSwitch) {
+      await axios
+        .post("http://localhost:4000/user/signup", {
+          username: usernameRef.current.value,
+          email: emailRef.current.value,
+          phone: phoneRef.current.value,
+          password: passwordRef.current.value,
+        })
+        .then((result) => console.log(result))
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      await axios
+        .post("http://localhost:4000/user/login", {
+          username: usernameRef.current.value,
+          email: emailRef.current.value,
+          phone: phoneRef.current.value,
+          password: passwordRef.current.value,
+        })
+        .then((result) => {
+          console.log(result);
+          localStorage.setItem("token", result.data.token);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err.response.data.error);
+        });
+    }
+    // usernameRef.current.value = "";
+    // emailRef.current.value = "";
+    // phoneRef.current.value = "";
+    // passwordRef.current.value = "";
   };
 
   return (
