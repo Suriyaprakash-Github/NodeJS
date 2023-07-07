@@ -68,7 +68,7 @@ const AllExpenses = () => {
         </select>
         <button>Show Expenses</button>
       </form>
-      <div>
+      <div className="table">
         <table>
           <thead>
             <tr>
@@ -78,21 +78,21 @@ const AllExpenses = () => {
               <th>Actions</th>
             </tr>
           </thead>
+          {allExpense.map((expense) => (
+            <tbody key={expense.id}>
+              <tr>
+                <td>{expense.expense}</td>
+                <td>{expense.category}</td>
+                <td>{expense.cost}</td>
+                <td>
+                  <button onClick={deleteHandler.bind(null, expense.id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          ))}
         </table>
-        {allExpense.map((expense) => (
-          <tbody key={expense.id}>
-            <tr>
-              <td>{expense.expense}</td>
-              <td>{expense.category}</td>
-              <td>{expense.cost}</td>
-              <td>
-                <button onClick={deleteHandler.bind(null, expense.id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        ))}
       </div>
       <button onClick={() => getExpense(parseInt(currentPage) - 1)}>
         Previous Page

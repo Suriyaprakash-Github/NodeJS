@@ -40,7 +40,7 @@ exports.addNewExpense = async (req, res, next) => {
 exports.deleteExpense = async (req, res, next) => {
   const tran = await sequelize.transaction();
   let userId = req.body.id;
-  console.log(">>>>>>>>>" + userId);
+  // console.log(">>>>>>>>>" + userId);
   await ExpenseModel.findByPk(userId).then(async (data) => {
     console.log("got data from here" + data);
     if (data.dataValues.userId === req.user.id) {

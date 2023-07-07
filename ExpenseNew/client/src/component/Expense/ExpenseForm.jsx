@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import classes from "../../styles/ExpenseForm.module.css";
 import axios from "axios";
 
 const ExpenseForm = () => {
@@ -32,8 +33,12 @@ const ExpenseForm = () => {
     <>
       <h2>Add Expense</h2>
 
-      <form action="" onSubmit={expenseFormSubmitHandler}>
-        <div>
+      <form
+        action=""
+        onSubmit={expenseFormSubmitHandler}
+        className={classes.ExpenseForm}
+      >
+        <div className={classes.formControl}>
           <label htmlFor="expense">Expense</label>
           <input
             type="text"
@@ -44,7 +49,7 @@ const ExpenseForm = () => {
           />
         </div>
 
-        <div>
+        <div className={classes.formControl}>
           <label htmlFor="category">Expense Category</label>
           <select name="category" id="category" ref={catergoryRef} required>
             <option value="">Choose an Expenditure</option>
@@ -65,7 +70,7 @@ const ExpenseForm = () => {
           </select>
         </div>
 
-        <div>
+        <div className={classes.formControl}>
           <label htmlFor="cost">Cost</label>
           <input type="number" id="cost" name="cost" ref={costRef} required />
         </div>

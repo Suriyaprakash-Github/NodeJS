@@ -1,19 +1,20 @@
 .loginContainer {
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 1.5rem;
-  background-color: rgb(207, 206, 206);
+  background-color: #80ed99;
 }
+.loginContainer > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .formControl {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px;
-}
-
-.formControl label {
-  margin-right: 10px;
+  flex-direction: column;
 }
