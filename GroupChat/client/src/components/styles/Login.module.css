@@ -11,10 +11,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 5px solid aqua;
+  border-radius: 10px;
   background-color: white;
   box-shadow: 10px 10px 30px rgb(189, 189, 189);
 }
-
+.hrVertical {
+  height: 80%;
+  width: 0;
+  border: 1px solid rgb(189, 189, 189);
+}
 .l_leftContainer {
   width: 50%;
   font-size: 20px;
