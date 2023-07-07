@@ -1,4 +1,5 @@
 import "./App.css";
+import Group from "./components/Group/Group";
 import Login from "./components/Login/Login";
 
 function App() {
@@ -6,7 +7,8 @@ function App() {
     <>
       <div>
         Group Chat App
-        <Login />
+        {/* <Login /> */}
+        <Group />
       </div>
     </>
   );
