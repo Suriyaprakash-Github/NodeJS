@@ -30,9 +30,9 @@ exports.signup = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-function tokenGenerator(id, email, phone) {
+function tokenGenerator(id, email, phone, name) {
   return jwt.sign(
-    { userId: id, email: email, phone: phone },
+    { userId: id, email: email, phone: phone, username: name },
     process.env.JWTSECRETKEY
   );
 }
@@ -59,7 +59,8 @@ exports.login = (req, res, next) => {
             token: tokenGenerator(
               result.dataValues.id,
               result.dataValues.email,
-              result.dataValues.phone
+              result.dataValues.phone,
+              result.dataValues.username
             ),
           });
         }

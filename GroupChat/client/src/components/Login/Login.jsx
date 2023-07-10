@@ -46,10 +46,10 @@ const Login = () => {
           alert(err.response.data.error);
         });
     }
-    // usernameRef.current.value = "";
-    // emailRef.current.value = "";
-    // phoneRef.current.value = "";
-    // passwordRef.current.value = "";
+    usernameRef.current.value = "";
+    emailRef.current.value = "";
+    phoneRef.current.value = "";
+    passwordRef.current.value = "";
   };
 
   return (
