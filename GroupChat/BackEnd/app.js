@@ -18,10 +18,6 @@ require("dotenv").config();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-// const corDeatils = {
-//   origin: "http://localhost:3000/",
-//   methods: ["GET", "POST", "DELETE", "PUT"],
-// };
 
 // realtions between each other;
 // User.hasMany(ForgotPassword);

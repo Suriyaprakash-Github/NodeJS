@@ -135,7 +135,6 @@ exports.deleteGroup = async (req, res, next) => {
         id: groupId,
       },
     });
-    console.log("check owner=====>", checkowner);
     if (checkowner[0]) {
       const deleteGroup = await Group.destroy({
         where: {
