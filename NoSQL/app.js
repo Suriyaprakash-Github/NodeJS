@@ -1,8 +1,4 @@
 const path = require("path");
-require("dotenv").config();
-
-const express = require("express");
-const bodyParser = require("body-parser");
 
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/database").mongoConnect;
