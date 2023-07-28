@@ -3,8 +3,6 @@ const MongoClient = mongodb.MongoClient;
 
 let _db;
 
-const sequelize = new Sequelize("node-complete", "root", "nodecomplete", {
-  dialect: "mysql",
 const mongoConnect = (callback) => {
   MongoClient.connect(process.env.DBURL)
     .then((client) => {
@@ -15,7 +13,15 @@ const mongoConnect = (callback) => {
     .catch((err) => {
       console.log(err);
       throw err;
-});
+    });
+};
+
+const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw "No DB Found";
+};
 
 exports.mongoConnect = mongoConnect;
 exports.getDb = getDb;
