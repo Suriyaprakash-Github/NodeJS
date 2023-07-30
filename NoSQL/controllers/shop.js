@@ -53,7 +53,7 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user
-    .populate("cart.productId")
+    .populate("cart.productId") //This will collect the product details from the product collection with the help of ref Id
     .then((user) => {
       const products = user.cart;
       res.render("shop/cart", {
@@ -77,9 +77,11 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
+  console.log(req.body);
   req.user
     .deleteCartItem(prodId)
     .then((result) => {
+      console.log(result);
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));
