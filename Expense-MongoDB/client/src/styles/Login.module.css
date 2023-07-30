@@ -1,0 +1,20 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #80ed99;
+}
+.loginContainer > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.formControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
